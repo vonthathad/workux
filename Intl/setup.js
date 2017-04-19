@@ -7,7 +7,7 @@ export const enabledLanguages = [
 // this object will have language-specific data added to it which will be placed in the state when that language is active
 // if localization data get to big, stop importing in all languages and switch to using API requests to load upon switching languages
 export const localizationData = {};
-
+export const channel = (!process.env.CHANNEL || process.env.CHANNEL !== 'fr') ? 'en' : process.env.CHANNEL;
 // here you bring in 'intl' browser polyfill and language-specific polyfills
 // (needed as safari doesn't have native intl: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl)
 // as well as react-intl's language-specific data

@@ -1,5 +1,8 @@
 export default {
   locale: 'fr',
+  adsChannel1: 'ChannelID1',
+  adsChannel2: 'ChannelID2',
+  analyticChannel: 'ChannelAnalytic',
   messages: {
     siteTitle: 'MERN blog de démarrage',
     addPost: 'Ajouter Poster',

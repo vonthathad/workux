@@ -13,7 +13,7 @@ import Footer from './components/Footer/Footer';
 // Import Actions
 import { toggleAddPost } from './AppActions';
 import { switchLanguage } from '../../modules/Intl/IntlActions';
-
+import { fetchUser } from '../User/UserActions';
 export class App extends Component {
   constructor(props) {
     super(props);
@@ -21,6 +21,13 @@ export class App extends Component {
   }
 
   componentDidMount() {
+    if (window.localStorage.getItem('token')) {
+      this.props.dispatch(fetchUser(window.localStorage.getItem('token')));
+    } else {
+      if (this.props.location.query && this.props.location.query.access_token) {
+        this.props.dispatch(fetchUser(this.props.location.query.access_token.split('#_=_')[0]));
+      }
+    }
     this.setState({isMounted: true}); // eslint-disable-line
   }
 
@@ -67,6 +74,7 @@ App.propTypes = {
   children: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
   intl: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired,
 };
 
 // Retrieve data from store as props

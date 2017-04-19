@@ -1,7 +1,7 @@
-import { enabledLanguages, localizationData } from '../../../Intl/setup';
+import { enabledLanguages, localizationData, channel } from '../../../Intl/setup';
 import { SWITCH_LANGUAGE } from './IntlActions';
 
-const initLocale = global.navigator && global.navigator.language || 'en';
+const initLocale = channel;
 
 const initialState = {
   locale: initLocale,
@@ -20,5 +20,12 @@ const IntlReducer = (state = initialState, action) => {
       return state;
   }
 };
-
+export const analyticChannel = initialState.messages.analyticChannel;
+export const getAdsChannels = state => {
+  const adsChannels = {
+    start: state.intl.messages.adsChannel1,
+    end: state.intl.messages.adsChannel2,
+  };
+  return adsChannels;
+};
 export default IntlReducer;

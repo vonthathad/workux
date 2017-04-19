@@ -2,6 +2,7 @@ import callApi from '../../util/apiCaller';
 
 // Export Constants
 export const ADD_POST = 'ADD_POST';
+export const RESET_POST = 'RESET_POST';
 export const ADD_POSTS = 'ADD_POSTS';
 export const DELETE_POST = 'DELETE_POST';
 
@@ -10,6 +11,12 @@ export function addPost(post) {
   return {
     type: ADD_POST,
     post,
+  };
+}
+
+export function resetMe() {
+  return {
+    type: RESET_POST
   };
 }
 
@@ -37,6 +44,12 @@ export function fetchPosts() {
     return callApi('posts').then(res => {
       dispatch(addPosts(res.posts));
     });
+  };
+}
+
+export function resetPost() {
+  return (dispatch) => {
+    dispatch(resetMe());
   };
 }
 
