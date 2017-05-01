@@ -3,7 +3,6 @@ import { OAuth2Strategy as GoogleStrategy } from 'passport-google-oauth';
 import Jwt from 'jsonwebtoken';
 import config from '../../config';
 import User from '../../models/user';
-const privateKey = config.key.privateKey;
 
 function filter(str) {
   let text = str;
@@ -75,7 +74,7 @@ export default () => {
       };
       let avatar = profile.photos[0].value.split('sz=')[0];
       avatar += 'sz=150';
-      const token = Jwt.sign(tokenData, privateKey);
+      const token = Jwt.sign(tokenData, config.key);
       const providerUserProfile = {
         email,
         username,

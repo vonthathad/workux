@@ -4,8 +4,8 @@ const config = {
   guestToken: 'GUEST_TOKEN_HERE',
   key: 'KEY_TOKEN_HERE',
   facebook: {
-    clientID: 'CLIENT_ID',
-    clientSecret: 'CLIENT_SECRET',
+    clientID: '1778993745699618',
+    clientSecret: '72ec32d7798a0cac8b3e190232e14934',
     callbackURL: '/oauth/facebook/callback',
     profileFields: ['id', 'displayName', 'email', 'gender'],
   },
