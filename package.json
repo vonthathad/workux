@@ -17,8 +17,7 @@
     "lint": "eslint client server"
   },
   "pre-commit": [
-    "lint",
-    "test"
+    "lint"
   ],
   "repository": {
     "type": "git",
@@ -47,6 +46,7 @@
     "mongoose-simple-random": "^0.4.1",
     "passport": "^0.3.2",
     "passport-facebook": "^2.1.1",
+    "passport-google-oauth": "^1.0.0",
     "passport-http-bearer": "^1.0.1",
     "passport-oauth2-refresh": "^1.0.0",
     "react": "^15.1.0",
