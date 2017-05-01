@@ -4,6 +4,7 @@
 const passport = require('passport');
 import bearer from './modules/passports/bearer';
 import facebook from './modules/passports/facebook';
+import google from './modules/passports/google';
 import User from './models/user';
 export default () => {
   passport.serializeUser((user, done) => {
@@ -18,6 +19,7 @@ export default () => {
   });
   bearer(passport);
   facebook(passport);
+  google(passport);
   // require('./passports/bearer')();
   // require('./passports/facebook')();
 };

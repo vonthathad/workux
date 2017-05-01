@@ -9,6 +9,12 @@ const config = {
     callbackURL: '/oauth/facebook/callback',
     profileFields: ['id', 'displayName', 'email', 'gender'],
   },
+  google: {
+    clientID: '844189525883-m0ph4rv2dn2k4fp0e6euk0rp2hqtqh4g.apps.googleusercontent.com',
+    clientSecret: 'Ywnw7PUSIcasbPUoUQ4wvm1J',
+    callbackURL: '/oauth/google/callback',
+    profileFields: ['id', 'displayName', 'email', 'gender'],
+  },
   app: {
     id: 'PRODUCT_ID',
     name: 'PRODUCT_NAME',
