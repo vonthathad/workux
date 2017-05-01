@@ -6,6 +6,7 @@ import bodyParser from 'body-parser';
 import path from 'path';
 import IntlWrapper from '../client/modules/Intl/IntlWrapper';
 import createPassport from './passport';
+import session from 'express-session';
 // Webpack Requirements
 import webpack from 'webpack';
 import config from '../webpack.config.dev';
@@ -59,7 +60,11 @@ app.use(bodyParser.json({ limit: '20mb' }));
 app.use(bodyParser.urlencoded({ limit: '20mb', extended: false }));
 app.use(Express.static(path.resolve(__dirname, '../dist')));
 app.use(passport.initialize());
-app.use(passport.session());
+app.use(session({
+  saveUninitialized: true,
+  resave: true,
+  secret: 'CROWDBAM',
+}));
 app.use('/api', api);
 app.use('/oauth', oauth);
 
