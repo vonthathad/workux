@@ -1,71 +1,99 @@
-/**
- * Created by andh on 7/19/16.
- */
 import mongoose from 'mongoose';
-import autoIncrement from 'mongoose-auto-increment';
-import config from '../config';
 const Schema = mongoose.Schema;
-const connection = mongoose.createConnection(config.mongoURL);
+import autoIncrement from 'mongoose-auto-increment';
+import serverConfig from '../configs/server.config.js';
+const connection = mongoose.createConnection(serverConfig.mongoURL);
 autoIncrement.initialize(connection);
 const UserSchema = new Schema({
-  displayName: String,
+  url: {
+    type: String,
+    trim: true,
+    description: 'short url of user',
+    unique: true,
+  },
   username: {
     type: String,
-    unique: true,
-    required: 'Username is required',
-    match: [/^[A-Za-z0-9_.]{1,15}$/, 'Please fill a valid username'],
+    trim: true,
+    description: 'email login of user',
+    required: 'Require username',
+  },
+  displayName: {
+    type: String,
     trim: true,
   },
-  email: {
+  password: {
     type: String,
-    match: [/\S+@\S+\.\S+/, 'Please fill a valid e-mail address'],
-    required: 'Email is required',
-    unique: true,
+    trim: true,
+    minlength: 5,
   },
-  avatar: String,
-  mobile: Number,
+  salt: {
+    type: String,
+    trim: true,
+  },
+  token: {
+    type: String,
+    trim: true,
+  },
+  avatar: {
+    type: String,
+    trim: true,
+  },
+  bio: {
+    type: String,
+    trim: true,
+  },
+  company: {
+    type: Number,
+  },
+  suspend: {
+    type: Boolean,
+    default: false,
+  },
+  violation: {
+    type: Number,
+    default: 0,
+  },
+  aph: {
+    type: Number,
+    description: 'action per hour',
+    default: 0,
+  },
+  role: {
+    type: Number,
+  },
+  createdTime: {
+    type: Date,
+    default: Date.now,
+  },
+  lastTime: {
+    type: Date,
+    default: Date.now,
+  },
   provider: {
+    type: Number,
+    required: 'Require provider',
+  },
+  providerId: {
+    type: Number,
+  },
+  providerData: {
+    type: Object,
+  },
+  resetPasswordToken: {
     type: String,
-    required: 'Provider is required',
+    trim: true,
   },
-  providerId: String,
-  providerData: {},
-  token: String,
-  active: {
+  resetPasswordExpires: {
     type: Date,
     default: Date.now,
   },
-  created: {
-    type: Date,
-    default: Date.now,
-  },
+
 
 });
 UserSchema.plugin(autoIncrement.plugin, {
   model: 'User',
   startAt: 1,
 });
-
-
-UserSchema.statics.findUniqueUsername = function (username, suffix,
-    callback) {
-  const _this = this;
-  const possibleUsername = username + (suffix || '');
-  _this.findOne({
-    username: possibleUsername,
-  }, (err, user) => {
-    if (!err) {
-      if (!user) {
-        callback(possibleUsername);
-      } else {
-        return _this.findUniqueUsername(username, (suffix || 0) +
-                    1, callback);
-      }
-    } else {
-      return callback(null);
-    }
-    return false;
-  });
-};
+UserSchema.index({ title: 'text', description: 'text' });
 UserSchema.set('toJSON', { getters: true, virtuals: true });
 export default mongoose.model('User', UserSchema);
