@@ -1,6 +1,6 @@
 var fs = require('fs');
 var path = require('path');
-var ExternalsPlugin = require('webpack-externals-plugin');
+var ExternalsPlugin = require('webpack2-externals-plugin');
 
 module.exports = {
 
@@ -19,7 +19,7 @@ module.exports = {
   },
 
   resolve: {
-    extensions: ['', '.js', '.jsx'],
+    extensions: ['.js', '.jsx'],
     modules: [
       'client',
       'node_modules',
@@ -27,26 +27,30 @@ module.exports = {
   },
 
   module: {
-    loaders: [
+    rules: [
       {
-        test: /\.js$/,
+        test: /\.js?$/,
         exclude: /node_modules/,
-        loader: 'babel-loader',
-        query: {
-          presets: [
-            'react',
-            'es2015',
-            'stage-0',
-          ],
-          plugins: [
-            [
-              'babel-plugin-webpack-loaders', {
-                'config': './webpack.config.babel.js',
-                "verbose": false
-              }
-            ]
-          ]
-        },
+        use: [
+          {
+            loader: 'babel-loader',
+            query: {
+              presets: [
+                'react',
+                'es2015',
+                'stage-0',
+              ],
+              plugins: [
+                [
+                  'babel-plugin-webpack-loaders', {
+                    'config': './webpack.config.babel.js',
+                    "verbose": false
+                  }
+                ]
+              ]
+            }
+          },
+        ]
       }, {
         test: /\.json$/,
         loader: 'json-loader',

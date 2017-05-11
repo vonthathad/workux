@@ -6,7 +6,7 @@ import { Provider } from 'react-redux';
 import { Router, browserHistory } from 'react-router';
 import IntlWrapper from './modules/Intl/IntlWrapper';
 import ReactGA from 'react-ga';
-import { analyticChannel } from 'modules/Intl/IntlReducer';
+import { analyticChannel } from './modules/Intl/IntlReducer';
 ReactGA.initialize(analyticChannel);
 // Import Routes
 import routes from './routes';
