@@ -2,12 +2,22 @@
  * Created by andh on 3/17/17.
  */
 import passport from 'passport';
-// var users = require('../controllers/user.server.controller.js');
+import * as users from '../controllers/user.controller';
 import { Router } from 'express';
 const router = new Router();
 
+
+// ///////// LOCAL REGISTER
+router.post('/register', users.register);
+
+// ///////// LOCAL LOGIN
+router.post('/login', users.login);
+
+// ///////// LOGOUT
+router.get('/logout', users.authLogout);
+
+// ///////// FACEBOOK LOGIN
 router.route('/facebook').get((req, res, next) => {
-  console.log(req);
   const request = req;
   request.session.redirect = request.query.redirect || '/';
   next();
@@ -16,6 +26,7 @@ router.route('/facebook/callback').get(passport.authenticate('facebook', { failu
   res.redirect(`${req.session.redirect.split('?')[0]}?access_token=${req.user.token}`);
 });
 
+// ///////// GOOGLE LOGIN
 router.route('/google').get((req, res, next) => {
   const request = req;
   request.session.redirect = request.query.redirect || '/';

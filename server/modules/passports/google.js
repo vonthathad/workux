@@ -1,8 +1,7 @@
-import passport from 'passport';
 import { OAuth2Strategy as GoogleStrategy } from 'passport-google-oauth';
 import Jwt from 'jsonwebtoken';
 import config from '../../config';
-import User from '../../models/user';
+import User from '../../models/user.model';
 
 function filter(str) {
   let text = str;
@@ -51,7 +50,7 @@ const saveOAuthUserProfile = (req, providerUserProfile, done) => {
     return null;
   });
 };
-export default () => {
+export default (passport) => {
   const strategy = new GoogleStrategy({
             // clientID: config.facebook.clientID,
             // clientSecret: config.facebook.clientSecret,

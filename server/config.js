@@ -2,7 +2,14 @@ const config = {
   mongoURL: process.env.MONGO_URL || 'mongodb://localhost:27017/mern-starter',
   port: process.env.PORT || 4000,
   guestToken: 'GUEST_TOKEN_HERE',
-  key: 'KEY_TOKEN_HERE',
+  secret: 'WORKUX',
+  token: {
+    guest: 'CRzytqL1lv1o8FaogFa2S4MyYU4F6Z9D',
+  },
+  key: {
+    privateKey: 'PRIVATEKEYGOESHERE',
+    tokenExpiry: 30 * 1000 * 60, // 1 hour
+  },
   facebook: {
     clientID: '1778993745699618',
     clientSecret: '72ec32d7798a0cac8b3e190232e14934',

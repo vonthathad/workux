@@ -1,12 +1,12 @@
 /**
  * Created by andh on 3/17/17.
  */
-const passport = require('passport');
 import bearer from './modules/passports/bearer';
+import local from './modules/passports/local';
 import facebook from './modules/passports/facebook';
 import google from './modules/passports/google';
-import User from './models/user';
-export default () => {
+import User from './models/user.model';
+export default (passport) => {
   passport.serializeUser((user, done) => {
     done(null, user.id);
   });
@@ -18,6 +18,7 @@ export default () => {
     });
   });
   bearer(passport);
+  local(passport);
   facebook(passport);
   google(passport);
   // require('./passports/bearer')();

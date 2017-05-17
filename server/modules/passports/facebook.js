@@ -1,8 +1,7 @@
-import passport from 'passport';
 import FacebookStrategy from 'passport-facebook';
 import Jwt from 'jsonwebtoken';
 import config from '../../config';
-import User from '../../models/user';
+import User from '../../models/user.model';
 function locdau(str) {
   let text = str;
   text = text.toLowerCase();
@@ -21,7 +20,7 @@ const saveOAuthUserProfile = (req, providerUserProfile, done) => {
   const profile = providerUserProfile;
   User.findOne({
     provider: profile.provider,
-    providerId: profile.providerId
+    providerId: profile.providerId,
   }, (err, user) => {
     if (err) {
       return done(err);
@@ -50,13 +49,13 @@ const saveOAuthUserProfile = (req, providerUserProfile, done) => {
     return null;
   });
 };
-export default () => {
+export default (passport) => {
   const strategy = new FacebookStrategy.Strategy({
     clientID: config.facebook.clientID,
     clientSecret: config.facebook.clientSecret,
     callbackURL: config.facebook.callbackURL,
     profileFields: config.facebook.profileFields,
-    passReqToCallback: true
+    passReqToCallback: true,
   }, (req, accessToken, refreshToken, profile, done) => {
     const providerData = profile._json;
     providerData.accessToken = accessToken;
@@ -67,7 +66,7 @@ export default () => {
     const expired = Date.now() + 45 * 24 * 60 * 60 * 1000;
     const tokenData = {
       email,
-      expired
+      expired,
     };
     const token = Jwt.sign(tokenData, config.key);
     const providerUserProfile = {
@@ -78,7 +77,7 @@ export default () => {
       avatar: `https://graph.facebook.com/${profile.id}/picture?width=150&height=150`,
       provider: 'facebook',
       providerId: profile.id,
-      providerData
+      providerData,
     };
     if (profile.displayName) {
       providerUserProfile.displayName = profile.displayName;

@@ -1,68 +1,61 @@
 import Express from 'express';
-import compression from 'compression';
+// import compression from 'compression';
 import mongoose from 'mongoose';
 import passport from 'passport';
 import bodyParser from 'body-parser';
 import path from 'path';
-import serialize from 'serialize-javascript';
-import createPassport from './passport';
-import session from 'express-session';
 import cors from 'cors';
+import session from 'express-session';
+import serialize from 'serialize-javascript';
 // Webpack Requirements
-import webpack from 'webpack';
-import config from '../webpack.config.dev';
-import webpackDevMiddleware from 'webpack-dev-middleware';
-import webpackHotMiddleware from 'webpack-hot-middleware';
+// import webpack from 'webpack';
+// import webpackConfig from '../webpack.config.dev';
+// import webpackDevMiddleware from 'webpack-dev-middleware';
+// import webpackHotMiddleware from 'webpack-hot-middleware';
 
 // Initialize the Express App
 const app = new Express();
 
-if (process.env.NODE_ENV === 'development') { app.use(cors()); }
-
 // Run Webpack dev server in development mode
-if (process.env.NODE_ENV === 'development') {
-  const compiler = webpack(config);
-  app.use(webpackDevMiddleware(compiler, { noInfo: true, publicPath: config.output.publicPath }));
-  app.use(webpackHotMiddleware(compiler));
-}
+// if (process.env.NODE_ENV === 'development') {
+//   const compiler = webpack(webpackConfig);
+//   app.use(webpackDevMiddleware(compiler, { noInfo: true, publicPath: webpackConfig.output.publicPath }));
+//   app.use(webpackHotMiddleware(compiler));
+// }
 
-
-// Import required modules
+// import posts from './routes/post.routes';
 import api from './routes/api.routes';
 import oauth from './routes/oauth.routes';
+// import dummyData from './dummyData';
 import serverConfig from './config';
+import mongooseAction from './mongoose';
+import passportAction from './passport';
 
-// Set native promises as mongoose promise
-mongoose.Promise = global.Promise;
 
-// MongoDB Connection
-mongoose.connect(serverConfig.mongoURL, (error) => {
-  if (error) {
-    console.error('Please make sure Mongodb is installed and running!'); // eslint-disable-line no-console
-    throw error;
-  } else {
-    createPassport();
-  }
-
-  // feed some dummy data in DB.
-  // dummyData();
-});
-
+// if (process.env.NODE_ENV === 'development') { app.use(cors()); }
+app.use(cors());
+app.use(session({
+  saveUninitialized: true,
+  secret: 'Tuoihoctro',
+  resave: true,
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 // Apply body Parser and server public assets and routes
-app.use(compression());
+// app.use(compression());
 app.use(bodyParser.json({ limit: '20mb' }));
 app.use(bodyParser.urlencoded({ limit: '20mb', extended: false }));
 app.use(Express.static(path.resolve(__dirname, '../dist')));
-app.use(passport.initialize());
-app.use(session({
-  saveUninitialized: true,
-  resave: true,
-  secret: 'CROWDBAM',
-}));
+app.use(Express.static(path.resolve(__dirname, '../public')));
 app.use('/api', api);
 app.use('/oauth', oauth);
+app.get('*.js', (req, res, next) => {
+  const request = req;
+  request.url = `${req.url}.gz`;
+  res.set('Content-Encoding', 'gzip');
+  next();
+});
 if (process.env.NODE_ENV === 'production') {
-  const IntlWrapper = require('../client/modules/Intl/IntlWrapper');
   const configureStore = require('../client/store').configureStore;
   const Provider = require('react-redux').Provider;
   const React = require('react');
@@ -179,9 +172,7 @@ if (process.env.NODE_ENV === 'production') {
         .then(() => {
           const initialView = renderToString(
             <Provider store={store}>
-              <IntlWrapper>
-                <RouterContext {...renderProps} />
-              </IntlWrapper>
+              <RouterContext {...renderProps} />
             </Provider>
           );
           const finalState = store.getState();
@@ -195,12 +186,15 @@ if (process.env.NODE_ENV === 'production') {
     });
   });
 }
-
-// start app
-app.listen(serverConfig.port, (error) => {
-  if (!error) {
-    console.log(`MERN is running on port: ${serverConfig.port}! Build something amazing!`); // eslint-disable-line
-  }
+mongooseAction(mongoose, () => {
+  // start app
+  app.listen(serverConfig.port, (error) => {
+    if (!error) {
+      console.log(`MERN is running on port: ${serverConfig.port}! Build something amazing!`); // eslint-disable-line
+    }
+  });
+  passportAction(passport);
 });
+
 
 export default app;
